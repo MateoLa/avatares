@@ -1,6 +1,6 @@
 require 'tempfile'
 
-module Avatarable
+module Avatares
   module Models
     class Avatar
 
@@ -16,9 +16,9 @@ module Avatarable
         @model = model
 
         # defaults
-        @color       = Avatarable.color
-        @size        = Avatarable.size
-        @font        = Avatarable.font
+        @color       = Avatares.color
+        @size        = Avatares.size
+        @font        = Avatares.font
 
         # extract the first letter of the first 3 words and capitalize
         @text = (string.split(/\s/)- ["", nil]).map { |t| t[0].upcase }.slice(0, 3).join('')

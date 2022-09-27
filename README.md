@@ -33,7 +33,7 @@ docker-compose exec "your-app-service" bundle exec convert -version
 Add to your Gemfile:
 
 ```ruby
-gem 'avatar_span', github: 'MateoLa/avatar_span'
+gem 'avatares', github: 'MateoLa/avatares'
 ```
 
 And then execute:
@@ -42,13 +42,13 @@ And then execute:
 $ bundle install
 ```
 
-If you want to change the default color, font, and size you must run:
+If you want to change the default text color, font or size you should run:
 
 ```sh
-$ rails generate avatarable:install
+$ rails generate avatares:install
 ```
 
-This will generate the /config/initializer/avatarable.rb file
+This will generate /config/initializer/avatares.rb configuration file
 
 ## Settings
 
@@ -58,15 +58,15 @@ In your model:
 
 ```ruby
 class User < ActiveRecord::Base
-  acts_as_messageable
+  acts_as_avatarable
 end
 ```
 
-You are not limited to the User model. You can use Avatarable in any other model and use it in several different models.
+You are not limited to the User model. You can use "acts_as_avatarable" in any other model and use it in several different models.
 
 ### Model String
 
-Your avatarable model must define the avatar_string method which is used to get the initials to generate the avatar.
+Your avatarable model must define the avatar_string method which is used to generate the initials avatar.
 The engine will extract at most 3 initials from the passed-in string (e.g. Bill James Pheonix MacKenzie will produce an avatar with the initials BJP).
 
 ```ruby
@@ -84,7 +84,6 @@ module Spree::UserDecorator
     base.acts_as_avatarable
   end
 
-  #Return any text from the model to extract the initials for the avatar
   def avatar_string
     self.addresses&.last&.full_name || self.email
   end
@@ -95,10 +94,10 @@ Spree::User.prepend Spree::UserDecorator
 
 ### Text Color, Font & Size
 
-You should modify the avatarable initializer (/config/initializer/avatarable.rb) to edit the following defaults:
+To change the defaults you must modify the avatares initializer (/config/initializer/avatares.rb):
 
 ```ruby
-Avatarable.setup do |config|
+Avatares.setup do |config|
   config.color = "#FFFFFF"
   config.size = "150x150"
   config.font = "DejaVu-Sans"
@@ -122,7 +121,7 @@ Once the gem is installed you can use in any of your views:
 <%= image_tag @user.avatar.url if @user.avatar.attached? %>
 ```
 
-Users can also upload any desired photo of them:
+Users can also upload any desired picture instead:
 ```ruby
 <%= image_tag @user.avatar.url if @user.avatar.attached? %>
 ```

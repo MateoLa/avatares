@@ -1,4 +1,4 @@
-module Avatarable
+module Avatares
   module Models
     module Avatarable
       extend ActiveSupport::Concern

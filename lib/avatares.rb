@@ -1,6 +1,6 @@
-module Avatarable
+module Avatares
   module Models
-    autoload :Avatarable, 'avatarable/models/avatarable'
+    autoload :Avatarable, 'avatares/models/avatarable'
   end
 
   mattr_accessor :color
@@ -16,5 +16,5 @@ module Avatarable
 end
 
 require 'mini_magick'
-require "avatarable/engine"
-require "avatarable/models/avatar"
+require "avatares/engine"
+require "avatares/models/avatar"
