@@ -22,3 +22,4 @@ end
 require 'mini_magick'
 require "avatares/engine"
 require "avatares/models/avatar"
+require "avatares/controller_helpers/avatar_params"
