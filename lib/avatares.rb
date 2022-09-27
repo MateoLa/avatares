@@ -13,6 +13,10 @@ module Avatares
   def self.setup
     yield self
   end
+
+  def self.protected_attributes?
+    defined?(ProtectedAttributes)
+  end
 end
 
 require 'mini_magick'

@@ -113,17 +113,17 @@ Over docker run:
 docker-compose exec "your-app-service" bundle exec convert -list font
 ```
 
-## Usage
+### Preparing your views
 
-Once the gem is installed you can use in any of your views:
+Use in any of your views:
 
 ```ruby
 <%= image_tag @user.avatar.url if @user.avatar.attached? %>
 ```
 
-Users can also upload any desired picture instead:
+In your avatarable model you can also upload any desired picture instead:
 ```ruby
-<%= image_tag @user.avatar.url if @user.avatar.attached? %>
+<%= f.file_field :avatar, class: "m-3" %>
 ```
 
 ## License

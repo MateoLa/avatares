@@ -1,0 +1,5 @@
+module ApplicationControllerDecorator
+  ApplicationController.include Avatares::ControllerHelpers::AvatarParams
+end
+
+ApplicationController.prepend ApplicationControllerDecorator

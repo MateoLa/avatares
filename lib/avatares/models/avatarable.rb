@@ -24,6 +24,12 @@ module Avatares
         return if avatar.attached?
         Avatar.new(self, avatar_string).call
       end
+
+      private
+
+      def acts_as_avatarable?
+        return true
+      end
     end
   end
 end
