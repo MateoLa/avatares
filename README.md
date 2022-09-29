@@ -8,7 +8,7 @@ Rails gem for Initials Avatars (Gmail style) like those pictured below
 
 The gem is configurable and options can be set to control text color, font, and size.
 
-There are plenty of Rails avatar gems, this one is mainly based on [Muhammad Ebeid](
+There are plenty of Avatar gems, this one is mainly based on [Muhammad Ebeid](
 https://www.muhammadebeid.com/blog/generate-initials-avatar-programmatically-with-minimagick-and-active-storage) blog and [AvatarMagick](https://github.com/bjedrocha/avatar_magick) plugin. 
 
 ## Requirements
@@ -40,17 +40,31 @@ And then execute:
 
 ```sh
 $ bundle install
-```
-
-If you want to change the default text color, font or size you should run:
-
-```sh
 $ rails generate avatares:install
 ```
 
-This will generate /config/initializer/avatares.rb configuration file
-
 ## Settings
+
+### Text Color, Font & Size
+
+You can change the default text color, font or size by modifying the initializer /config/initializer/avatares.rb.
+
+```ruby
+Avatares.setup do |config|
+  config.color = "#FFFFFF"
+  config.size = "150x150"
+  config.font = "DejaVu-Sans"
+end
+```
+
+#### Choosing Fonts
+
+To see what fonts are available, open up the terminal and type ```$ convert -list font```. You can select any font listed when configuring.
+
+Over docker run:
+```sh
+docker-compose exec "your-app-service" bundle exec convert -list font
+```
 
 ### Preparing your models
 
@@ -90,27 +104,6 @@ module Spree::UserDecorator
 end
 
 Spree::User.prepend Spree::UserDecorator
-```
-
-### Text Color, Font & Size
-
-To change the defaults you must modify the avatares initializer (/config/initializer/avatares.rb):
-
-```ruby
-Avatares.setup do |config|
-  config.color = "#FFFFFF"
-  config.size = "150x150"
-  config.font = "DejaVu-Sans"
-end
-```
-
-##### Choosing Fonts
-
-To see what fonts are available, open up the terminal and type ```$ convert -list font```. You can select any font listed when configuring.
-
-Over docker run:
-```sh
-docker-compose exec "your-app-service" bundle exec convert -list font
 ```
 
 ### Preparing your views

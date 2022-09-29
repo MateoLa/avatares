@@ -1,26 +1,33 @@
-$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'initials_avatar'
+# Configure Rails Envinronment
+ENV["RAILS_ENV"] = "test"
 
-# Requires supporting files with custom matchers and macros, etc,
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
+require File.expand_path("../dummy/config/environment.rb",  __FILE__)
+require "rails/test_help"
+require "rspec/rails"
 
-RSpec.configure do |c|
-  c.after(:each) do
-    Dragonfly::App.destroy_apps
-  end
-end
+ActionMailer::Base.delivery_method = :test
+ActionMailer::Base.perform_deliveries = true
+ActionMailer::Base.default_url_options[:host] = "test.com"
 
-def test_app(name=nil)
-  app = Dragonfly::App.instance(name)
-  app.datastore = Dragonfly::MemoryDataStore.new
-  app.secret = "test secret"
-  app
-end
+Rails.backtrace_cleaner.remove_silencers!
 
-def test_avatar_magick_app
-  test_app.configure do
-    generator :convert, Dragonfly::ImageMagick::Generators::Convert.new
-    processor :convert, Dragonfly::ImageMagick::Processors::Convert.new
-    plugin :avatarmagick
-  end
+# Configure capybara for integration testing
+require "capybara/rails"
+Capybara.default_driver   = :rack_test
+Capybara.default_selector = :css
+
+# Run any available migration
+ActiveRecord::Migrator.migrate File.expand_path("../dummy/db/migrate/", __FILE__)
+
+# Load support files
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+
+RSpec.configure do |config|
+  # Remove this line if you don't want RSpec's should and should_not
+  # methods or matchers
+  require 'rspec/expectations'
+  config.include RSpec::Matchers
+
+  # == Mock Framework
+  config.mock_with :rspec
 end
