@@ -4,41 +4,46 @@ module Avatares
       extend ActiveSupport::Concern
 
       included do
-        before_save :rescue_avatar_params, if: self.acts_as_avatarable?
+        before_action :save_avatar, only: :update, if: :resource_avatarable?
+        rescue_from ActiveRecord::RecordNotFound, with: :resource_not_found
       end
 
-      rescue_from ActiveRecord::RecordNotFound, with: :resource_not_found
-
-      def rescue_avatar_params
-binding.pry
-        self.permit.params[:avatar]
+      def save_avatar
+        if params[model_name][:avatar]
+          resource.avatar = params[model_name][:avatar]
+          resource.save
+          params[model_name].delete :avatar
+        end
       end
 
-      protected
+      private
+
+      def resource_avatarable?
+        resource&.avatarable?
+      end
 
       def resource
-        return @resource if @resource
-    
-        parent_model_name = parent_data[:model_name] if parent_data
-        @resource = Spree::Admin::Resource.new controller_path, controller_name, parent_model_name, object_name
-      end
-
-      def model_class
-        @model_class ||= resource.model_class
-      end
-    
-      def resource_not_found
-        flash[:error] = I18n.t(:not_found, resource: model_class)
-        redirect_to collection_url
-      end
-
-      def load_resource
-        @object ||= load_resource_instance
-        instance_variable_set("@#{resource.object_name}", @object)
+        @resource ||= load_resource_instance
       end
 
       def load_resource_instance
-        model_class.find(params[:id]) if params[:id]
+        model_class.find_by_id(params[:id]) if params[:id]
+      end
+
+      def model_class
+        parts = controller_path.split('/')
+        gem_part = parts[0].capitalize if parts.length > 1
+        gem_part = "#{gem_part}::" unless gem_part.empty?
+        @model_class ||= "#{gem_part}#{controller_name.classify}".constantize
+      end
+
+      def model_name
+        @omodel_name ||= controller_name.singularize
+      end
+
+      def resource_not_found
+        flash[:error] = I18n.t(:not_found, resource: model_class, scope: :avatarable)
+        redirect_to request.referrer
       end
 
     end

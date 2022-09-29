@@ -1,0 +1,16 @@
+---
+en:
+  errors:
+    messages:
+      content_type_invalid: "Must be an image(png, jpg or jpeg)"
+      file_size_out_of_range: "File to big, must be less than 5MB in size"
+  avatares:
+    avatar_deleted: Avatar Deleted
+    avatar_action_popup:
+      delete_button: Yes, Delete      
+      delete_title: Are you Sure?
+      delete_text: Do you really want<br />to delete your picture?
+    edit_avatar: Edit Picture
+    not_found: Not found %{resource}
+    user_avatar: Account Picture
+    user_avatar_error: "An error ocurred trying to update your picture. Please try again."

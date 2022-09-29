@@ -25,10 +25,8 @@ module Avatares
         Avatar.new(self, avatar_string).call
       end
 
-      private
-
-      def acts_as_avatarable?
-        return true
+      def avatarable?
+        true
       end
     end
   end
