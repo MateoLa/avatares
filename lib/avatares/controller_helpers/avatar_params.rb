@@ -4,15 +4,18 @@ module Avatares
       extend ActiveSupport::Concern
 
       included do
-        before_action :save_avatar, only: :update, if: :resource_avatarable?
+        before_action :rescue_avatar_params, only: :update, if: :resource_avatarable?
         rescue_from ActiveRecord::RecordNotFound, with: :resource_not_found
       end
 
-      def save_avatar
+      def rescue_avatar_params
         if params[model_name][:avatar]
-          resource.avatar = params[model_name][:avatar]
-          resource.save
+          resource.avatar.attach params[model_name][:avatar]
           params[model_name].delete :avatar
+        end
+        if params[model_name][:avatar_img_del]
+          resource.avatar.purge
+          params[model_name].delete :avatar_img_del
         end
       end
 
