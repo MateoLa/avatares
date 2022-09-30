@@ -19,4 +19,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "mini_magick"      # Ruby interface for ImageMagick
+  spec.add_dependency "inline_svg"
+
+  spec.add_development_dependency "rspec-rails"
+  spec.add_development_dependency "factory_bot_rails"
+  spec.add_development_dependency "capybara"
 end
