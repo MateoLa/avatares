@@ -1,7 +1,8 @@
 class Actor < ActiveRecord::Base
   
-    has_many :avatars,
-        :validate => true,
-        :autosave => true
-  
+  acts_as_avatarable
+
+  def avatar_string
+    name
+  end
 end

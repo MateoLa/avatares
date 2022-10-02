@@ -17,16 +17,4 @@ ActiveRecord::Schema.define(:version => 20110411073238) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "avatars", :force => true do |t|
-    t.integer  "actor_id"
-    t.string   "logo_file_name"
-    t.string   "logo_content_type"
-    t.integer  "logo_file_size"
-    t.datetime "logo_updated_at"
-    t.boolean  "active",            :default => true
-  end
-
-  add_index "avatars", ["actor_id"], :name => "index_avatars_on_actor_id"
-
 end

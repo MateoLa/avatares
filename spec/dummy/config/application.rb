@@ -7,7 +7,7 @@ require "action_view/railtie"
 require "action_mailer/railtie"
 
 Bundler.require
-require "avatars_for_rails"
+require "avatares"
 
 
 module Dummy
