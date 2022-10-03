@@ -1,13 +1,12 @@
 # Configure Rails Envinronment
 ENV['RAILS_ENV'] ||= 'test'
 
-require File.expand_path("../dummy/config/environment.rb",  __FILE__)
-require "rails/test_help"
+begin
+  require_relative "../spec/dummy/config/environment"
+rescue LoadError
+  puts 'Could not load dummy application. Please ensure you have run `bundle exec rake test_app`'
+end
 require "rspec/rails"
-
-ActionMailer::Base.delivery_method = :test
-ActionMailer::Base.perform_deliveries = true
-ActionMailer::Base.default_url_options[:host] = "test.com"
 
 Rails.backtrace_cleaner.remove_silencers!
 
