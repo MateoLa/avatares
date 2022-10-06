@@ -18,10 +18,13 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
+  spec.add_dependency 'rails'
   spec.add_dependency "mini_magick"      # Ruby interface for ImageMagick
   spec.add_dependency "inline_svg"
+  spec.add_dependency "active_storage_validations"
 
   spec.add_development_dependency "rspec-rails"
   spec.add_development_dependency "factory_bot_rails"
   spec.add_development_dependency "capybara"
+  spec.add_development_dependency "sqlite3"
 end

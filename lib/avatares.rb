@@ -20,6 +20,7 @@ module Avatares
 end
 
 require 'mini_magick'
+require "active_storage_validations"
 require "avatares/engine"
 require "avatares/models/avatar"
 require "avatares/controller_helpers/avatar_params"

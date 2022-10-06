@@ -1,11 +1,8 @@
 # Configure Rails Envinronment
 ENV['RAILS_ENV'] ||= 'test'
 
-begin
-  require_relative "../spec/dummy/config/environment"
-rescue LoadError
-  puts 'Could not load dummy application. Please ensure you have run `bundle exec rake test_app`'
-end
+require_relative "../spec/dummy/config/environment"
+require "rails/test_help"
 require "rspec/rails"
 
 Rails.backtrace_cleaner.remove_silencers!
@@ -16,7 +13,7 @@ Capybara.default_driver   = :rack_test
 Capybara.default_selector = :css
 
 # Run any available migration
-ActiveRecord::Migrator.migrate File.expand_path("../dummy/db/migrate/", __FILE__)
+ActiveRecord::MigrationContext.new(File.expand_path('../dummy/db/migrate', __FILE__)).migrate
 
 # Load support files
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
