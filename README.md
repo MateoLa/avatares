@@ -8,7 +8,7 @@ Rails gem for Initials Avatars (Gmail style) like those pictured below
 
 The gem is configurable and options can be set to control text color, font, and size.
 
-There are plenty of Avatar gems, this one is mainly based on [Muhammad Ebeid](
+There are plenty of ruby Avatar gems, this one is mainly based on [Muhammad Ebeid](
 https://www.muhammadebeid.com/blog/generate-initials-avatar-programmatically-with-minimagick-and-active-storage) blog and [AvatarMagick](https://github.com/bjedrocha/avatar_magick) plugin. 
 
 ## Requirements
