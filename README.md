@@ -13,7 +13,8 @@ https://www.muhammadebeid.com/blog/generate-initials-avatar-programmatically-wit
 
 ## Requirements
 
-ImageMagick command-line tool has to be installed on your system. You can check if you have it installed by running
+ImageMagick command-line tool has to be installed on your system.<br>
+You can check if you have it installed by running:
 
 ```
 $ convert -version
