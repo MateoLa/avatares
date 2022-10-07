@@ -69,27 +69,22 @@ docker-compose exec "your-app-service" bundle exec convert -list font
 
 ### Preparing your models
 
-In your model:
+```acts_as_avatarable``` and ```avatar_string``` method should be added to your avatarable model.
 
 ```ruby
 class User < ActiveRecord::Base
   acts_as_avatarable
+
+  #Returning any kind of string you want for the model
+  def avatar_string
+    return "You should add method :avatar_string in your Avatarable model"
+  end  
 end
 ```
+
+The avatar_string method is used to generate the initials avatar. The engine will extract at most 3 initials from the passed-in string (e.g. Bill James Pheonix MacKenzie will produce an avatar with the initials BJP).
 
 You are not limited to the User model. You can use "acts_as_avatarable" in any other model and use it in several different models.
-
-### Model String
-
-Your avatarable model must define the avatar_string method which is used to generate the initials avatar.
-The engine will extract at most 3 initials from the passed-in string (e.g. Bill James Pheonix MacKenzie will produce an avatar with the initials BJP).
-
-```ruby
-#Returning any kind of string you want for the model
-def avatar_string
-  return "You should add method :avatar_string in your Avatarable model"
-end
-```
 
 ### Preparing your views
 
