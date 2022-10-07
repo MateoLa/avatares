@@ -90,6 +90,25 @@ def avatar_string
 end
 ```
 
+### Preparing your views
+
+Use in any of your views:
+
+```ruby
+<%= image_tag @user.avatar.url if @user.avatar.attached? %>
+```
+
+It is possible to upload any picture to the avatarable model.<br>
+There are two options for that:<br>
+1) Decorate your avatarable controller to ```include Avatares::ControllerHelpers::AvatarParams```
+2) In the avatarable controller permit ```:avatar``` and ```:avatar_img_del``` parameters. You also need to modify the update action to allow the picture deletion.
+
+Then add to your model form:
+
+```ruby
+<%= f.file_field :avatar, class: "m-3" %>
+```
+
 #### Spree example
 
 ```ruby
@@ -106,17 +125,12 @@ end
 Spree::User.prepend Spree::UserDecorator
 ```
 
-### Preparing your views
-
-Use in any of your views:
-
 ```ruby
-<%= image_tag @user.avatar.url if @user.avatar.attached? %>
-```
+module Spree::UsersControllerDecorator
+  Spree::UsersController.include Avatares::ControllerHelpers::AvatarParams
+end
 
-In your avatarable model you can also upload any desired picture instead:
-```ruby
-<%= f.file_field :avatar, class: "m-3" %>
+Spree::UsersController.prepend Spree::UsersControllerDecorator
 ```
 
 ## License
