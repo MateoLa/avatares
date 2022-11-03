@@ -4,7 +4,7 @@ module Avatares
 
     initializer "avatares.models.avatarable" do
       ActiveSupport.on_load(:active_record) do
-        extend Avatares::Models::Avatarable::ActiveRecordExtension
+        extend Avatares::Avatarable::ActiveRecordExtension
       end
     end
 

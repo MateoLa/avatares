@@ -2,4 +2,6 @@
 en:
   avatares:
     avatar_deleted: Avatar Deleted
+    avatar_error: Avatar Error
+    avatar_updated: Avatar Updated
     not_found: Not found %{resource}

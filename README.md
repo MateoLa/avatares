@@ -34,7 +34,7 @@ docker-compose exec "your-app-service" bundle exec convert -version
 Add to your Gemfile:
 
 ```ruby
-gem 'avatares', github: 'MateoLa/avatares'
+gem 'avatares', '~> 1.0.0', github: 'MateoLa/avatares'
 ```
 
 And then execute:
@@ -51,10 +51,10 @@ $ rails generate avatares:install
 You can change the default text color, font or size by modifying the initializer /config/initializer/avatares.rb.
 
 ```ruby
-Avatares.setup do |config|
-  config.color = "#FFFFFF"
-  config.size = "150x150"
-  config.font = "DejaVu-Sans"
+Avatares.setup do |set|
+  set.color = "#FFFFFF"
+  set.size = "150x150"
+  set.font = "DejaVu-Sans"
 end
 ```
 
@@ -75,14 +75,14 @@ docker-compose exec "your-app-service" bundle exec convert -list font
 class User < ActiveRecord::Base
   acts_as_avatarable
 
-  #Returning any kind of string you want for the model
+  #Return any string you want to use to generate de "initals" avatar.
   def avatar_string
     return "You should add method :avatar_string in your Avatarable model"
   end  
 end
 ```
 
-The avatar_string method is used to generate the initials avatar. The engine will extract at most 3 initials from the passed-in string (e.g. Bill James Pheonix MacKenzie will produce an avatar with the initials BJP).
+The engine will extract at most 3 initials from the passed-in string (e.g. Bill James Pheonix MacKenzie will produce an avatar with the initials BJP).
 
 You are not limited to the User model. You can use "acts_as_avatarable" in any other model and use it in several different models.
 
@@ -94,7 +94,7 @@ Use in any of your views:
 <%= image_tag @user.avatar.url if @user.avatar.attached? %>
 ```
 
-It is possible to upload any picture to the avatarable model.<br>
+It is possible to change the default avatar uploading any picture to the avatarable model.<br>
 There are two options for that:<br>
 1) Decorate your avatarable controller to ```include Avatares::ControllerHelpers::AvatarParams```
 2) In the avatarable controller permit ```:avatar``` and ```:avatar_img_del``` parameters. You also need to modify the update action to allow the picture deletion.
