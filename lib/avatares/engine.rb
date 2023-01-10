@@ -4,14 +4,12 @@ module Avatares
 
     initializer "avatares.models.avatarable" do
       ActiveSupport.on_load(:active_record) do
-        extend Avatares::Avatarable::ActiveRecordExtension
+        extend Avatares::Models::Avatarable::ActiveRecordExtension
       end
     end
 
-    config.to_prepare do
-      Dir.glob(File.join(File.dirname(__FILE__), "../../app/**/*_decorator.rb")) do |c|
-        Rails.configuration.cache_classes ? require(c) : load(c)
-      end
+    initializer "avatares.assets.precompile" do |app|
+      app.config.assets.precompile += %w( images/*.svg )
     end
   end
 end

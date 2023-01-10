@@ -26,9 +26,9 @@ Gem::Specification.new do |spec|
   spec.files = Dir["{app,config,db,lib}/**/*", "LICENSE", "Rakefile", "README.md"]
 
   spec.add_dependency 'rails'
-  spec.add_dependency "mini_magick"      # Ruby interface for ImageMagick
-  spec.add_dependency "inline_svg"
   spec.add_dependency "active_storage_validations"
+  spec.add_dependency "inline_svg"
+  spec.add_dependency "mini_magick"      # Ruby interface for ImageMagick
 
   spec.add_development_dependency "rspec-rails"
 end

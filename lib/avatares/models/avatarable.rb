@@ -1,4 +1,4 @@
-module Avatares
+module Avatares 
   module Models
     module Avatarable
       extend ActiveSupport::Concern
@@ -13,7 +13,7 @@ module Avatares
       included do
         has_one_attached :avatar, dependent: :destroy_async
         validates :avatar, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: 5.megabytes }
-        after_save :generate_avatar
+        after_commit :generate_default_avatar
       end
 
       attr_accessor :avatar_img_del
@@ -22,14 +22,14 @@ module Avatares
         raise NotImplementedError, "must implement avatar_string in your Avatarable model"
       end
 
-      def generate_avatar
+      def generate_default_avatar
         return if avatar.attached?
-        Avatar.new(self, avatar_string).call
+        DefaultAvatar.new(self, avatar_string).call
       end
-
+    
       def avatarable?
         true
       end
     end
-  end
+  end 
 end
