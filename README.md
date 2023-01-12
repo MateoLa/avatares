@@ -6,7 +6,7 @@ Rails gem for Initials Avatars (Gmail style) like those pictured below
 	<img src="https://user-images.githubusercontent.com/138067/52684517-8a70a400-2f14-11e9-8412-04945bc7c839.png" alt="sample">
 </p>
 
-The gem is configurable and options can be set to control text color, font, and size.
+The gem is configurable and options can be set into ```avatares.rb``` initializer.
 
 ## Requirements
 
@@ -88,7 +88,7 @@ You are not limited to the User model. You can use "acts_as_avatarable" in any o
 Use in any of your views:
 
 ```ruby
-<%= image_tag @user.avatar.url if @user.avatar.attached? %>
+<%= image_tag main_app.url_for(@user.avatar) if @user.avatar.attached? %>
 ```
 
 It is possible to change the default avatar uploading any picture to the avatarable model.<br>
@@ -125,6 +125,14 @@ end
 
 Spree::UsersController.prepend Spree::UsersControllerDecorator
 ```
+
+## References
+
+There are many Avatar gems, this one is mainly based on:
+  . [Muhammad Ebeid](
+https://www.muhammadebeid.com/blog/generate-initials-avatar-programmatically-with-minimagick-and-active-storage) blog
+  . [AvatarMagick](https://github.com/bjedrocha/avatar_magick) plugin
+  . [Avatar For Rails](https://github.com/ging/avatars_for_rails) plugin
 
 ## License
 
