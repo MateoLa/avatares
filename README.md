@@ -129,10 +129,10 @@ Spree::UsersController.prepend Spree::UsersControllerDecorator
 ## References
 
 There are many Avatar gems, this one is mainly based on:
-  . [Muhammad Ebeid](
+* [Muhammad Ebeid](
 https://www.muhammadebeid.com/blog/generate-initials-avatar-programmatically-with-minimagick-and-active-storage) blog
-  . [AvatarMagick](https://github.com/bjedrocha/avatar_magick) plugin
-  . [Avatar For Rails](https://github.com/ging/avatars_for_rails) plugin
+* [AvatarMagick](https://github.com/bjedrocha/avatar_magick) plugin
+* [Avatar For Rails](https://github.com/ging/avatars_for_rails) plugin
 
 ## License
 
