@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-12 col-lg-6 text-center">
+    <%= inline_svg_tag "person.svg", id: "js-user-avatar-preview", size: "256x256" %>
+  </div>
+    
+  <div class="col-12 col-lg-6 d-flex align-items-center">
+    <div class="w-100">
+      <%= form_for @user, url: spree.edit_user_path(@user), method: :put do |f| %>
+<% byebug %>
+
+        <%= f.file_field :avatar, id: "js-user-avatar-file" %>
+        <%= f.submit Spree.t(:update), class: 'btn btn-block btn-primary spree-btn' %>
+      <% end if can? :update, @user  %>
+    </div>
+  </div>
+</div>
