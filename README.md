@@ -6,9 +6,7 @@ Rails gem for Initials Avatars (Gmail style) like those pictured below
 	<img src="https://user-images.githubusercontent.com/138067/52684517-8a70a400-2f14-11e9-8412-04945bc7c839.png" alt="sample">
 </p>
 
-The gem is configurable and options can be set to control text color, font, and size.
-
-
+The gem is configurable and options can be set into ```avatares.rb``` initializer.
 
 ## Requirements
 
