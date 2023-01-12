@@ -10,11 +10,10 @@ module Avatares
       end
 
       def add_avatares_routes
-        insert_into_file(File.join('config', 'routes.rb'), after: "Rails.application.routes.draw do") do
+        insert_into_file(File.join('config', 'routes.rb'), :before => /^end\b/) do
           <<-ROUTES.strip_heredoc.indent!(2)
-            \n
             # Avatares routes.
-            mount Avatares::Engine, at: '/avatares'
+            mount Avatares::Engine, at: '/avatares', as: "avatares"
           ROUTES
         end
       end

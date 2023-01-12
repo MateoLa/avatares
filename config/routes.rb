@@ -1,3 +1,3 @@
 Avatares::Engine.routes.draw do
-  resource :avatar, only: [:edit, :update, :destroy]
+  resources :avatar, only: [:edit, :update, :destroy]
 end

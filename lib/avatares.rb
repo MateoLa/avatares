@@ -1,21 +1,22 @@
 module Avatares
-  module Models
-    autoload :Avatarable, 'avatares/models/avatarable'
-  end
+  autoload :Avatarable, 'avatares/avatarable'
+  autoload :ActiveRecordExtension, 'avatares/active_record_extension'
 
-  mattr_accessor :color
-  @@color = "#FFFFFF"
-  mattr_accessor :size
-  @@size = "150x150"
+  # Method to get the avatarable in the controller
+  mattr_accessor :controller_avatarable
+  @@controller_avatarable = :current_user
+
+  # Default styles to be generated
+  mattr_accessor :avatarable_styles
+  @@avatarable_styles = { small:  '50x50',
+                          medium: '120x120',
+                          large: '260x260' }
+
   mattr_accessor :font
   @@font = "DejaVu-Sans"
 
   def self.setup
     yield self
-  end
-
-  def self.protected_attributes?
-    defined?(ProtectedAttributes)
   end
 end
 

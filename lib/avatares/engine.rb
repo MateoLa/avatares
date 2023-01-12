@@ -2,9 +2,9 @@ module Avatares
   class Engine < Rails::Engine
     engine_name 'avatares'
 
-    initializer "avatares.models.avatarable" do
+    initializer "avatares.avatarable" do
       ActiveSupport.on_load(:active_record) do
-        extend Avatares::Models::Avatarable::ActiveRecordExtension
+        extend Avatares::ActiveRecordExtension
       end
     end
 
