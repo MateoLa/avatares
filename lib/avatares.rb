@@ -6,12 +6,15 @@ module Avatares
   mattr_accessor :controller_avatarable
   @@controller_avatarable = :current_user
 
-  # Default styles to be generated
-  mattr_accessor :avatarable_styles
-  @@avatarable_styles = { small:  '50x50',
-                          medium: '120x120',
-                          large: '260x260' }
+  # Default image styles to use by the app
+  mattr_accessor :styles
+  @@styles = { small:  '50x50',
+               medium: '120x120',
+               large: '260x260' }
 
+  # Font Color
+  mattr_accessor :color 
+  @@color = "#FFFFFF"
   mattr_accessor :font
   @@font = "DejaVu-Sans"
 
