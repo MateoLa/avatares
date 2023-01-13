@@ -3,9 +3,14 @@ module Avatares
     extend ActiveSupport::Concern
 
     included do
-      has_one_attached :avatar, dependent: :destroy_async
+      has_one_attached :avatar, dependent: :destroy_async do |attachable|
+        attachable.variant :small, resize: Avatares.styles[:small]
+        attachable.variant :medium, resize: Avatares.styles[:medium]
+        attachable.variant :large, resize: Avatares.styles[:large]
+      end
+
       validates :avatar, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: 5.megabytes }
-      after_commit :generate_default_avatar
+#      after_commit :generate_default_avatar
     end
 
     attr_accessor :avatar_img_del
