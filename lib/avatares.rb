@@ -9,8 +9,8 @@ module Avatares
   # Default image styles to use by the app
   mattr_accessor :styles
   @@styles = { small:  '50x50',
-               medium: '120x120',
-               large: '260x260' }
+               medium: '200x200',
+               large: '350x350' }
 
   # Font Color
   mattr_accessor :color 

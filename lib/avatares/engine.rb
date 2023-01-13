@@ -9,7 +9,7 @@ module Avatares
     end
 
     initializer "avatares.assets.precompile" do |app|
-      app.config.assets.precompile += %w( images/*.svg )
+      app.config.assets.precompile << "avatares_manifest.js"
     end
   end
 end

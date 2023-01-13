@@ -1,6 +1,11 @@
+<% content_for :head do %>
+  <%= stylesheet_link_tag 'avatares', media: 'screen', data: { turbo_track: 'reload' } %>
+  <%= javascript_include_tag 'avatares', defer: true, data: { turbo_track: 'reload' } %>
+<% end %>
+
 <div class="row avatar-popup-form">
   <div class="col-12 col-lg-6 text-center">
-    <%= inline_svg_tag "person.svg", id: "js-user-avatar-preview", size: "256x256" %>
+    <%= inline_svg_tag "person.svg", id: "js-user-avatar-preview", size: "256px*256px" %>
   </div>
     
   <div class="col-12 col-lg-6 d-flex align-items-center">
