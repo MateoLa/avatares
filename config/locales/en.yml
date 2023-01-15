@@ -1,7 +1,9 @@
 ---
 en:
   avatares:
+    avatar_crop: Crop your new pofile picture
     avatar_deleted: Avatar Deleted
     avatar_error: Avatar Error
     avatar_updated: Avatar Updated
     not_found: Not found %{resource}
+    update: Set new picture

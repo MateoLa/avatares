@@ -10,7 +10,7 @@ module Avatares
       end
 
       validates :avatar, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: 5.megabytes }
-#      after_commit :generate_default_avatar
+      after_commit :generate_default_avatar
     end
 
     attr_accessor :avatar_img_del
