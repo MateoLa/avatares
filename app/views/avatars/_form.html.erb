@@ -14,8 +14,10 @@
           </button>
         </div>
         <div class="modal-body text-center">
-          <%= image_tag(main_app.url_for(@user.avatar), id: "js-avatares-picture-preview", size: 256) %>
-          <%= f.file_field :avatar, id: "js-avatares-picture", class: "d-none" %>
+          <div class="d-inline">
+            <%= image_tag(main_app.url_for(@user.avatar), id: "js-avatares-picture-preview", size: 256) %>
+            <%= f.file_field :avatar, id: "js-avatares-picture", class: "d-none" %>
+          </div>
         </div>
         <div class="modal-footer">
           <%= f.submit t(:update, scope: :avatars), class: "btn btn-block btn-primary spree-btn" %>

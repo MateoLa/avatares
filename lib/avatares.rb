@@ -6,15 +6,10 @@ module Avatares
   mattr_accessor :controller_avatarable
   @@controller_avatarable = :current_user
 
-  # Default image styles to use by the app
-  mattr_accessor :styles
-  @@styles = { small:  '50x50',
-               medium: '200x200',
-               large: '350x350' }
-
-  # Font Color
   mattr_accessor :color 
   @@color = "#FFFFFF"
+  mattr_accessor :size
+  @@size = "350x350"
   mattr_accessor :font
   @@font = "DejaVu-Sans"
 
@@ -23,8 +18,6 @@ module Avatares
   end
 end
 
-require 'jquery-rails'
-require 'jquery-ui-rails'
 require "i18n"
 require "active_storage_validations"
 require 'mini_magick'
