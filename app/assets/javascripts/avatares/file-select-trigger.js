@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  Jcrop.attach("js-avatares-picture-preview");
+  $("#js-avatares-picture-preview").Jcrop();
 
   $("#js-upload-trigger").on('click', function(e){
     e.preventDefault();

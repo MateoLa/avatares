@@ -23,6 +23,8 @@ module Avatares
   end
 end
 
+require 'jquery-rails'
+require 'jquery-ui-rails'
 require "i18n"
 require "active_storage_validations"
 require 'mini_magick'

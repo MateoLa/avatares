@@ -26,10 +26,12 @@ Gem::Specification.new do |spec|
   spec.files = Dir["{app,config,db,lib}/**/*", "LICENSE", "Rakefile", "README.md"]
 
   spec.add_dependency 'rails'
+  spec.add_dependency 'jquery-rails'
+  spec.add_dependency 'jquery-ui-rails'
   spec.add_dependency 'i18n'
   spec.add_dependency "active_storage_validations"
   spec.add_dependency "mini_magick"      # Ruby interface for ImageMagick
-  spec.add_dependency "jcrop-rails-v2", "~> 9.12.3"
+  spec.add_dependency "jcrop-rails-v2", "~> 0.9.12"
 
   spec.add_development_dependency "rspec-rails"
 end
