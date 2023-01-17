@@ -1,12 +1,13 @@
 $(document).ready(function(){
-  pic = $("#js-avatares-picture-preview");
-  w = pic.width();
-  h = pic.height();
+  const image = document.getElementById('js-avatares-picture-preview');
 
-  var rect = Jcop.Rect.from(pic)
-  var jcp = Jcrop.attach(pic, {
-    setSelect: [0, 0, 100, 100],
-    aspectRatio: 1
+  new Cropper(image, {
+    minContainerWidth: 250,
+    minContainerHeight: 250,
+    aspectRatio: 1,
+    ready() {
+      this.cropper.move(1, -1);
+    }
   });
 
   $("#avatares-edit-trigger").on('click', function(e){
