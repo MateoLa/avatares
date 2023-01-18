@@ -3,8 +3,8 @@ module Avatares
   autoload :ActiveRecordExtension, 'avatares/active_record_extension'
 
   # Method to get the avatarable in the controller
-  mattr_accessor :controller_avatarable
-  @@controller_avatarable = :current_user
+  mattr_accessor :avatarable_instance
+  @@avatarable_instance = :current_user
 
   mattr_accessor :color 
   @@color = "#FFFFFF"

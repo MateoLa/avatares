@@ -1,5 +1,4 @@
 module AvatarsHelper
-
   def resource_avatarable?
     resource&.avatarable?
   end
@@ -24,3 +23,10 @@ module AvatarsHelper
     redirect_to request.referrer
   end
 end
+
+
+(byebug) @avatarable.class.to_s.underscore
+"spree/user"
+(byebug) @avatarable.class.to_s
+"Spree::User"
+(byebug)
