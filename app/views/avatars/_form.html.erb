@@ -6,7 +6,7 @@
 <div class="modal fade" id="avatarPopup" tabindex="-1" role="dialog" aria-labelledby="avatarPopupLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <%= form_for avatarable, url: avatares.avatar_path, method: :put do |f| %>
+      <%= form_for avatarable, url: avatares.avatar_path do |f| %>
         <div class="modal-header">
           <h5 class="modal-title"><%= t(:avatar_crop, scope: :avatares) %></h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -15,15 +15,15 @@
         </div>
         <div class="modal-body text-center">
           <div class="d-inline-block">
-            <%= image_tag(main_app.url_for(@user.avatar), id: "js-avatares-picture-preview", size: 256) %>
+            <%= image_tag(main_app.url_for(avatarable.avatar), id: "js-avatares-picture", size: 256) %>
           </div>
           <div id="js-avatares-trigger" class="d-inline text-primary ml-3">​
             <%= inline_svg_tag('edit.svg', width: 27.6, height: 24) %>
           </div>
-          <%= f.file_field :avatar, id: "js-avatares-picture", class: "d-none" %>
+          <%= f.file_field :avatar, id: "js-avatares-input", class: "d-none" %>
         </div>
         <div class="modal-footer">
-          <%= f.submit t(:update, scope: :avatares), class: "btn btn-block btn-primary spree-btn" %>
+          <%= f.submit t(:update, scope: :avatares), id: "js-avatares-crop", class: "btn btn-block btn-primary" %>
         </div>
       <% end %>
     </div>

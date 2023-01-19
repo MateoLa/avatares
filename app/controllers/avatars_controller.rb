@@ -1,6 +1,4 @@
 class AvatarsController < ApplicationController
-  include AvatarsHelper
-
   before_action :load_avatarable, on: [:update, :delete]
 
   def update
@@ -15,7 +13,7 @@ class AvatarsController < ApplicationController
   end
   
   def destroy
-    @resource.avatar.purge
+    @avatarable.avatar.purge
     redirect_to request.referrer || root_path
   end
   
@@ -24,9 +22,12 @@ class AvatarsController < ApplicationController
   def load_avatarable
     @avatarable ||= send Avatares.avatarable_instance
   end
-  
+
+  def model_name
+    @avatarable.class.to_s.split("::").last.underscore
+  end
+
   def avatar_params
-byebug
-    params.require(@avatarable.class.to_s.underscore).permit(:avatar)
+    params.require(model_name).permit(:avatar)
   end
 end

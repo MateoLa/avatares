@@ -1,8 +1,8 @@
-function readURL(input, cropper) {
+function readURL(input, cropper){
   if (input.files && input.files[0]) {
     var reader = new FileReader();
 
-    reader.onload = function(e) {
+    reader.onload = function(e){
       $('#js-avatares-picture-preview').attr('src', e.target.result);
       cropper.replace(e.target.result);
       cropper.move(1, -1);
@@ -11,10 +11,13 @@ function readURL(input, cropper) {
   }
 }
 
-$(document).ready(function() {
-  const image = document.getElementById('js-avatares-picture-preview');
+$(document).ready(function(){
+  const trigger = document.getElementById("js-avatares-trigger");
+  let input = document.getElementById("js-avatares-input");
+  const picture = document.getElementById("js-avatares-picture");
+  const crop = document.getElementById("js-avatares-crop");
 
-  cropper = new Cropper(image, {
+  cropper = new Cropper(picture, {
     minContainerWidth: 250,
     minContainerHeight: 250,
     aspectRatio: 1,
@@ -23,12 +26,18 @@ $(document).ready(function() {
     }
   });
 
-  $("#js-avatares-trigger").on('click', function(e) {
-    e.preventDefault();
-    $("#js-avatares-picture").trigger('click');
+  trigger.addEventListener("click", function(){
+    input.trigger("click");
   });
 
-  $("#js-avatares-picture").change(function() {
+  input.addEventListener("change", function(){
   	readURL(this, cropper);
 	});
+
+  crop.addEventListener("click", function(e){
+    e.preventDefault();
+    let imgurl = cropper.getCroppedCanvas().toDataURL();
+    input.src = imgurl;
+    e.target.submit;
+  });
 });
