@@ -2,6 +2,7 @@ class AvatarsController < ApplicationController
   before_action :load_avatarable, on: [:update, :delete]
 
   def update
+byebug
     if @avatarable.update(avatar_params)
       flash[:success] = t(:avatar_updated)
     elsif @avatarable.errors[:avatar]
@@ -28,6 +29,6 @@ class AvatarsController < ApplicationController
   end
 
   def avatar_params
-    params.require(model_name).permit(:avatar)
+    params.require(model_name).permit(:avatar, :crop_x, :cropo_y, :crop_w, :crop_h)
   end
 end

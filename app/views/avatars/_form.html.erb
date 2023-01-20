@@ -3,29 +3,34 @@
   <%= javascript_include_tag 'avatares/javascript.js', defer: true, data: { turbo_track: 'reload' } %>
 <% end %>
 
-<div class="modal fade" id="avatarPopup" tabindex="-1" role="dialog" aria-labelledby="avatarPopupLabel" aria-hidden="true">
+<%= form_for avatarable, url: avatares.avatar_path, remote: true, html: {id: "avataresForm"} do |f| %>
+  <%= f.file_field :avatar, id: "avataresInput", class: "d-none" %>
+  <%= f.hidden_field "crop_x", id:"crop_x" %>
+  <%= f.hidden_field "crop_y", id:"crop_y" %>
+  <%= f.hidden_field "crop_w", id:"crop_w" %>
+  <%= f.hidden_field "crop_h", id:"crop_h" %>
+  <%= f.submit "#", class: "d-none" %>
+<% end %>
+
+<div class="modal fade" id="avataresPopup" tabindex="-1" role="dialog" aria-labelledby="avatarPopupLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <%= form_for avatarable, url: avatares.avatar_path do |f| %>
-        <div class="modal-header">
-          <h5 class="modal-title"><%= t(:avatar_crop, scope: :avatares) %></h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+      <div class="modal-header">
+        <h5 class="modal-title"><%= t(:avatar_crop, scope: :avatares) %></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <div class="d-inline-block">
+          <%= image_tag "", id: "avataresPicture", size: 256 %>
         </div>
-        <div class="modal-body text-center">
-          <div class="d-inline-block">
-            <%= image_tag(main_app.url_for(avatarable.avatar), id: "js-avatares-picture", size: 256) %>
-          </div>
-          <div id="js-avatares-trigger" class="d-inline text-primary ml-3">​
-            <%= inline_svg_tag('edit.svg', width: 27.6, height: 24) %>
-          </div>
-          <%= f.file_field :avatar, id: "js-avatares-input", class: "d-none" %>
-        </div>
-        <div class="modal-footer">
-          <%= f.submit t(:update, scope: :avatares), id: "js-avatares-crop", class: "btn btn-block btn-primary" %>
-        </div>
-      <% end %>
+      </div>
+      <div class="modal-footer">
+        <button id="avataresCrop" class="btn btn-block btn-primary">
+          <%= t(:update, scope: :avatares) %>
+        </button>
+      </div>
     </div>
   </div>
 </div>
