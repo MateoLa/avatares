@@ -3,12 +3,9 @@
   <%= javascript_include_tag 'avatares/javascript.js', defer: true, data: { turbo_track: 'reload' } %>
 <% end %>
 
-<%= form_for avatarable, url: avatares.avatar_path, remote: true, html: {id: "avataresForm"} do |f| %>
+<%= form_for avatarable, url: Avatares.avatar_path, html: {id: "avataresForm"} do |f| %>
   <%= f.file_field :avatar, id: "avataresInput", class: "d-none" %>
-  <%= f.hidden_field "crop_x", id:"crop_x" %>
-  <%= f.hidden_field "crop_y", id:"crop_y" %>
-  <%= f.hidden_field "crop_w", id:"crop_w" %>
-  <%= f.hidden_field "crop_h", id:"crop_h" %>
+  <%= f.hidden_field :base64data, id: "avatares64Data" %>
   <%= f.submit "#", class: "d-none" %>
 <% end %>
 
@@ -27,7 +24,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button id="avataresCrop" class="btn btn-block btn-primary">
+        <button id="avataresCrop" class="btn btn-block btn-primary" data-url=<%= Avatares.avatar_path %> data-object=<%= avatarable %>>
           <%= t(:update, scope: :avatares) %>
         </button>
       </div>

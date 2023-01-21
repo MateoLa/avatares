@@ -2,6 +2,7 @@ class AvatarsController < ApplicationController
   before_action :load_avatarable, on: [:update, :delete]
 
   def update
+    blob = avatar_params[:base64data]
 byebug
     if @avatarable.update(avatar_params)
       flash[:success] = t(:avatar_updated)
@@ -29,6 +30,6 @@ byebug
   end
 
   def avatar_params
-    params.require(model_name).permit(:avatar, :crop_x, :cropo_y, :crop_w, :crop_h)
+    params.require(model_name).permit(:avatar, :base64data)
   end
 end

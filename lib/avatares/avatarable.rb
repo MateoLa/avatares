@@ -8,7 +8,7 @@ module Avatares
       after_commit :generate_default_avatar
     end
 
-    attr_accessor :crop_x, :crop_y, :crop_w, :crop_h
+    attr_accessor :base64data
     attr_accessor :avatar_img_del
 
     def avatar_string
