@@ -1,17 +1,29 @@
+function setCropData(data){
+  data = data.detail;
+  let crop_x = document.getElementById("crop_x");
+  let crop_y = document.getElementById("crop_y");
+  let crop_w = document.getElementById("crop_w");
+  let crop_h = document.getElementById("crop_h");
+
+  crop_x.value = data.x;
+  crop_y.value = data.y;
+  crop_w.value = data.width;
+  crop_h.value = data.height;
+}
+
 $(document).ready(function(){
   let avatar = document.getElementById("avataresAvatar");
   const trigger = document.getElementById("avataresEdit");
 
   let form = document.getElementById("avataresForm");
   let input = document.getElementById("avataresInput");
-  let base64data = document.getElementById("avatares64Data");
 
   const popup = document.getElementById("avataresPopup");
   const picture = document.getElementById("avataresPicture");
   const crop = document.getElementById("avataresCrop");
   let cropper;
 
-  trigger.addEventListener("click", function(){ input.trigger("click"); });
+  trigger.addEventListener("click", function(){ input.click(); });
 
   input.addEventListener("change", function(event){
     let files = event.target.files;
@@ -32,41 +44,35 @@ $(document).ready(function(){
     }
 	});
 
-  popup.on("shown.bs.modal", function(){
+  popup.addEventListener("shown.bs.modal", function(){
     cropper = new Cropper(picture, {
       minContainerWidth: 250,
       minContainerHeight: 250,
       aspectRatio: 1,
       viewMode: 2
     });
-  }).on("hidden.bs.modal", function(){
+  });
+  
+  popup.addEventListener("hidden.bs.modal", function(){
     cropper.destroy();
     cropper = null;
   });
 
   crop.addEventListener("click", function(){
-    let canvas;
-
-    if (cropper){
-      canvas = cropper.getCroppedCanvas({
-        width: 350,
-        height: 350
-      });
-      avatar.src = canvas.toDataURL();
-      canvas.toBlob(function(blob){
-        if (URL){ 
-          base64data.val() = URL.createObjectURL(blob);
-          form.submit();
-        } else if (FileReader){
-          let reader = new FileReader();
-          reader.readAsDataURL(blob);
-          reader.onloadend = function(){ 
-            base64data.val() = reader.result; 
-            form.onsubmit();
-          };
-        };
-      });
-    };
+    setCropData(cropper.getData());
+    setcanvas = cropper.getCroppedCanvas({
+      width: 350,
+      height: 350
+    });
+    canvas.toBlob(function(blob){
+      if (URL){ avatar.src = URL.createObjectURL(blob); }
+      else if (FileReader){
+        let reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = function(event){ avatar.src = reader.result };
+      }
+    });
+    form.submit();
   });
 
 });

@@ -13,7 +13,7 @@ module Avatares
         insert_into_file(File.join('config', 'routes.rb'), :before => /^end\b/) do
           <<-ROUTES.strip_heredoc.indent!(2)
             # Avatares routes.
-            mount Avatares::Engine, at: '/avatares', as: "avatares"
+            mount Avatares::Engine, at: '/avatares'
           ROUTES
         end
       end
