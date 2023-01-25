@@ -6,11 +6,8 @@ function setCropData(data){
 }
 
 $(document).ready(function(){
-  let avatar = document.getElementById("avataresAvatar");
   const trigger = $("#avataresEdit");
-
-  let form = $("#avataresForm");
-  let input = $("#avataresInput");
+  const input = $("#avataresInput");
 
   const popup = $("#avataresPopup");
   const picture = document.getElementById("avataresPicture");
@@ -52,10 +49,10 @@ $(document).ready(function(){
   });
 
   crop.click(function(){
+    const avatar = document.getElementById("avataresAvatar");
     setCropData(cropper.getData());
 
     let canvas = cropper.getCroppedCanvas({ width: 350, height: 350 });
-
     canvas.toBlob(function(blob){
       if (URL){ avatar.src = URL.createObjectURL(blob); }
       else if (FileReader){
@@ -64,8 +61,8 @@ $(document).ready(function(){
         reader.onloadend = function(event){ avatar.src = reader.result; };
       }
     });
-    
-    form.submit();
+
+    $("#avataresForm").submit();
   });
 
 });

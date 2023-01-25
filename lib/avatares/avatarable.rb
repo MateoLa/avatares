@@ -1,3 +1,5 @@
+require 'tempfile'
+
 module Avatares 
   module Avatarable
     extend ActiveSupport::Concern
@@ -30,10 +32,19 @@ module Avatares
     end
     
     def resize_avatar
+      picture = Tempfile.new ["picture", ".png"], binmode: true
+
+#      avatar = Tempfile.new(self.avatar.filename.to_s), binmode: true
+
+#      uploaded = params[:ticket][:uploaded_file]
+      File.open(picture, 'w') do |file|
+        file.write(self.avatar.attachment())
+      end
+
 byebug
-      avatar_path = ActiveStorage::Blob.service.send(:path_for, self.avatar.key)
-      av_path = self.avatar.service_url
-      image = MiniMagick::Image.new(av_path)
+#      avatar_path = self.avatar.attachable
+#      av_path = self.avatar.attachable.read
+      image = MiniMagick::Image.read(picture)
 byebug
 #      image.crop "#{crop_w} x #{crop_h} + #{crop_x} + #{crop_y}"
 #      self.avatar = image
