@@ -4,8 +4,6 @@ module Avatares
   module Avatarable
     extend ActiveSupport::Concern
 
-    include Rails.application.routes.url_helpers
-
     included do
       has_one_attached :avatar, dependent: :destroy_async do |attachable|
         attachable.variant :small, resize: Avatares.styles[:small]
@@ -42,10 +40,10 @@ module Avatares
 #        file.write(self.avatar)
 #      end
 
-byebug
+# byebug
 #      avatar_path = self.avatar.attachable
 #      av_path = self.avatar.attachable.read
-      image = MiniMagick::Image.from_blob(self.avatar.url)
+      image = MiniMagick::Image.open(self.avatar)
 byebug
       image.crop "#{crop_w} x #{crop_h} + #{crop_x} + #{crop_y}"
       self.avatar = image
