@@ -4,6 +4,8 @@ module Avatares
   module Avatarable
     extend ActiveSupport::Concern
 
+    include Rails.application.routes.url_helpers
+
     included do
       has_one_attached :avatar, dependent: :destroy_async do |attachable|
         attachable.variant :small, resize: Avatares.styles[:small]
@@ -11,8 +13,8 @@ module Avatares
         attachable.variant :large, resize: Avatares.styles[:large]
       end
       validates :avatar, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: 5.megabytes }
+      before_commit :resize_avatar, if: :cropping?
       after_commit :generate_default_avatar
-      after_commit :resize_avatar, if: :cropping?
     end
 
     attr_accessor :crop_x, :crop_y, :crop_w, :crop_h
@@ -32,22 +34,21 @@ module Avatares
     end
     
     def resize_avatar
-      picture = Tempfile.new ["picture", ".png"], binmode: true
-
-#      avatar = Tempfile.new(self.avatar.filename.to_s), binmode: true
+#      picture = Tempfile.new ["picture", ".png"], binmode: true
+# byebug
 
 #      uploaded = params[:ticket][:uploaded_file]
-      File.open(picture, 'w') do |file|
-        file.write(self.avatar.attachment())
-      end
+#      File.open(picture, 'w') do |file|
+#        file.write(self.avatar)
+#      end
 
 byebug
 #      avatar_path = self.avatar.attachable
 #      av_path = self.avatar.attachable.read
-      image = MiniMagick::Image.read(picture)
+      image = MiniMagick::Image.from_blob(self.avatar.url)
 byebug
-#      image.crop "#{crop_w} x #{crop_h} + #{crop_x} + #{crop_y}"
-#      self.avatar = image
+      image.crop "#{crop_w} x #{crop_h} + #{crop_x} + #{crop_y}"
+      self.avatar = image
 # byebug
     end
 
