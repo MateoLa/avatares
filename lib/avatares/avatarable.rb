@@ -5,6 +5,10 @@ module Avatares
     extend ActiveSupport::Concern
 
     included do
+      # Has to be called before has_one_attached
+      # after_ callbacks are executed in reverse order. #Rails 6
+#      after_commit :resize_avatar, if: :cropping?
+
       has_one_attached :avatar, dependent: :destroy_async do |attachable|
         attachable.variant :small, resize: Avatares.styles[:small]
         attachable.variant :medium, resize: Avatares.styles[:medium]
@@ -32,23 +36,39 @@ module Avatares
     end
     
     def resize_avatar
-#      picture = Tempfile.new ["picture", ".png"], binmode: true
-# byebug
-
-#      uploaded = params[:ticket][:uploaded_file]
-#      File.open(picture, 'w') do |file|
-#        file.write(self.avatar)
-#      end
-
-# byebug
-#      avatar_path = self.avatar.attachable
-#      av_path = self.avatar.attachable.read
-      image = MiniMagick::Image.open(self.avatar)
+      filename = self.avatar.filename.to_s
+      variation = ActiveStorage::Variation.new(crop: "#{crop_w} x #{crop_h} + #{crop_x} + #{crop_y}")
+      url = ActiveStorage::Blob.service.send(:path_for, self.avatar.key)
+#      url2 = ActiveStorage::Blob.service.send(:path_for, self.avatar)
+      input = File.open(url)
+    input2 = self.avatar.open
 byebug
-      image.crop "#{crop_w} x #{crop_h} + #{crop_x} + #{crop_y}"
-      self.avatar = image
+
+# message.header_image.open do |input|
+#  variation.transform(input, format: "png") do |output|
+#    message.cropped_header_image.attach \
+#      io: output,
+#      filename: "#{message.header_image.filename.base}.png",
+#      content_type: "image/png"
+#  end
+# end
+
+      variation.transform(input) do |output|
+        self.avatar.attach io: output, filename: filename #, content_type: "image/png"
+      end
+
+
+#      image = MiniMagick::Image.open(self.avatar)
 # byebug
+#      image.crop "#{crop_w} x #{crop_h} + #{crop_x} + #{crop_y}"
+
+#      self.avatar.attach io: StringIO.open(image.to_blob), filename: filename
+
+byebug
     end
 
   end
 end
+
+
+
