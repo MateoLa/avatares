@@ -14,8 +14,6 @@ module Avatares
 
   mattr_accessor :color 
   @@color = "#FFFFFF"
-  mattr_accessor :size
-  @@size = "350x350"
   mattr_accessor :font
   @@font = "DejaVu-Sans"
 

@@ -52,8 +52,7 @@ $(document).ready(function(){
     const avatar = document.getElementById("avataresAvatar");
     setCropData(cropper.getData());
 
-    let canvas = cropper.getCroppedCanvas({ width: 350, height: 350 });
-    canvas.toBlob(function(blob){
+    cropper.getCroppedCanvas().toBlob(function(blob){
       if (URL){ avatar.src = URL.createObjectURL(blob); }
       else if (FileReader){
         let reader = new FileReader();

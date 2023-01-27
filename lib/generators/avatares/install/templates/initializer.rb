@@ -8,6 +8,5 @@ Avatares.setup do |config|
   #                   large: '350x350' }
 
   # config.color = "#FFFFFF"
-  # config.size = "350x350"
   # config.font = "DejaVu-Sans"
 end

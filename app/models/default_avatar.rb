@@ -15,7 +15,7 @@ class DefaultAvatar
 
     # defaults
     @color       = Avatares.color
-    @size        = Avatares.size
+    @size        = Avatares.styles[:large]
     @font        = Avatares.font
 
     # extract the first letter of the first 3 words and capitalize
