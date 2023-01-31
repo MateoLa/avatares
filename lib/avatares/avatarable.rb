@@ -6,18 +6,12 @@ module Avatares
       # Has to be called before "has_one_attached" (after_ callbacks are executed in reverse order)
       after_commit :resize_avatar, if: :cropping?
 
-      has_one_attached :avatar, dependent: :destroy_async do |attachable|
-        attachable.variant :small, resize: Avatares.styles[:small]
-        attachable.variant :medium, resize: Avatares.styles[:medium]
-        attachable.variant :large, resize: Avatares.styles[:large]
-      end
+      has_one_attached :avatar, dependent: :destroy_async
       after_commit :generate_default_avatar
 
       attr_accessor :crop_x, :crop_y, :crop_w, :crop_h
-
       validates :avatar, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: 5.megabytes }
     end
-
 
     def avatar_string
       raise NotImplementedError, "must implement avatar_string in your Avatarable model"
@@ -35,7 +29,13 @@ module Avatares
     
     def resize_avatar
       filename = self.avatar.filename.to_s
-      variation = ActiveStorage::Variation.new(crop: [self.crop_x.to_i, self.crop_y.to_i, self.crop_w.to_i, self.crop_h.to_i] )
+      size = Avatares.size.split('x').map(&:to_i)
+      area = [self.crop_x.to_i, self.crop_y.to_i, self.crop_w.to_i, self.crop_h.to_i]
+
+      variation = ActiveStorage::Variation.new(
+        crop: area,
+        resize_to_fit: size
+      )
       self.crop_w = self.crop_h = self.crop_x = self.crop_y = nil    # Prevents an infinite loop
 
       url = ActiveStorage::Blob.service.send(:path_for, self.avatar.key)

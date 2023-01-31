@@ -28,9 +28,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rails'
   spec.add_dependency 'jquery-rails'
   spec.add_dependency 'jquery-ui-rails', '>= 4.0.0'
-  spec.add_dependency 'bootstrap', '~> 4.0'
+#  spec.add_dependency 'bootstrap', '~> 4.0'
   spec.add_dependency 'i18n'
   spec.add_dependency "active_storage_validations"
+  spec.add_dependency "image_processing"
   spec.add_dependency "mini_magick"      # Ruby interface for ImageMagick
 
   spec.add_development_dependency "rspec-rails"

@@ -15,13 +15,13 @@ class DefaultAvatar
 
     # defaults
     @color       = Avatares.color
-    @size        = Avatares.styles[:large]
+    @size        = Avatares.size
     @font        = Avatares.font
 
     # extract the first letter of the first 3 words and capitalize
-    @text = (string.split(/\s/)- ["", nil]).map { |t| t[0].upcase }.slice(0, 3).join('')
+    @text = string.split(/\s/).reject(&:blank?).map(&:upcase).slice(0, 3).join('')
 
-    w, h = @size.split('x').map { |d| d.to_i }
+    w, h = @size.split('x').map(&:to_i)
     @font_size = ( w / [@text.length, 2].max ).to_i
   end
 
