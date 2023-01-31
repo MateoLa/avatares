@@ -18,7 +18,7 @@ module Avatares
   end
 end
 
-# require 'bootstrap'
+require 'bootstrap'
 require 'jquery-rails'
 require 'jquery-ui-rails'
 require "i18n"

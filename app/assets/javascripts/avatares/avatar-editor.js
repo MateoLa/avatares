@@ -6,9 +6,10 @@ function setCropData(data){
 }
 
 $(document).ready(function(){
+  const avatar = document.getElementById("avataresAvatar");
   const trigger = $("#avataresEdit");
-  const input = $("#avataresInput");
 
+  const input = $("#avataresInput");
   const popup = $("#avataresPopup");
   const picture = document.getElementById("avataresPicture");
   const crop = $("#avataresCrop");
@@ -49,7 +50,6 @@ $(document).ready(function(){
   });
 
   crop.click(function(){
-    const avatar = document.getElementById("avataresAvatar");
     setCropData(cropper.getData());
 
     cropper.getCroppedCanvas().toBlob(function(blob){

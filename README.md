@@ -6,7 +6,7 @@ Rails gem for Initials Avatars (Gmail style) like those pictured below
 	<img src="https://user-images.githubusercontent.com/138067/52684517-8a70a400-2f14-11e9-8412-04945bc7c839.png" alt="sample">
 </p>
 
-You can also crop and upload your own images.</br>
+You can also crop and upload your own images.<br />
 
 ## Requirements
 
@@ -43,7 +43,7 @@ $ rails generate avatares:install
 
 ## Settings
 
-### Avatares Initializer
+### Initializer
 
 Options can be set to change the size of the image, the default text color or its font. 
 
@@ -60,11 +60,11 @@ Avatares.setup do |config|
 end
 ```
 
-Avatares assumes that `current_user` method can be used to access the avatarable in your controllers. If not provide an alternative method in `config.avatabrable_instance` (eg. @user).
+Avatares assumes that `current_user` can be used to access the avatarable in your controllers. If not provide an alternative method in `config.avatabrable_instance =` (eg. @user).
 
 #### Choosing Fonts
 
-To see what fonts can be choosen open up a terminal and type ```$ convert -list font```.
+To see what fonts can be choosen open up a terminal and type `$ convert -list font`.
 
 Over docker run:
 ```sh
@@ -73,7 +73,7 @@ docker-compose exec "your-app-service" bundle exec convert -list font
 
 ### Preparing your models
 
-```acts_as_avatarable``` and ```avatar_string``` methods should be added to your avatarable model.
+`acts_as_avatarable` and `avatar_string` methods should be added to your avatarable model.
 
 ```ruby
 class User < ActiveRecord::Base
@@ -105,7 +105,13 @@ For rendering the avatar form:
 <%= render partial: 'avatars/form', object: @user, as: :avatarable %>
 ```
 
-The form is implemented in a javascript PopUp so the `avataresAvatar` and `avataresEdit` IDs cannot be modified and must be used. 
+The form is implemented in a JavaScript PopUp so the `avataresEdit` and `avataresAvatar` IDs cannot be modified and must be used.<br />
+
+For deleting your picture and return to the default avatar:
+
+```ruby
+<%= link_to "Delete", avatares.avatar_path, method: :delete if @user.avatar.attached? && !@user.avatar.filename.sanitized.include?("avatar-") %>
+```
 
 ## Spree Example
 
@@ -143,9 +149,10 @@ Deface::Override.new(
 )
 ```
 
+You can also use:
+
 ```ruby
 <%= image_tag main_app.cdn_image_url(@user.avatar), id: "avataresAvatar", size: 200 if @user.avatar.attached? %>
-Can also be used.
 ```
 
 ## References

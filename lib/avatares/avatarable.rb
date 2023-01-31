@@ -4,10 +4,8 @@ module Avatares
 
     included do
       # Has to be called before "has_one_attached" (after_ callbacks are executed in reverse order)
-      after_commit :resize_avatar, if: :cropping?
-
+      after_commit :process_avatar
       has_one_attached :avatar, dependent: :destroy_async
-      after_commit :generate_default_avatar
 
       attr_accessor :crop_x, :crop_y, :crop_w, :crop_h
       validates :avatar, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: 5.megabytes }
@@ -23,8 +21,10 @@ module Avatares
 
     private
 
-    def generate_default_avatar
+    def process_avatar
+byebug
       DefaultAvatar.new(self, avatar_string).call unless avatar.attached?
+      resize_avatar if cropping?
     end
     
     def resize_avatar
