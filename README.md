@@ -6,7 +6,7 @@ Rails gem for Initials Avatars (Gmail style) like those pictured below
 	<img src="https://user-images.githubusercontent.com/138067/52684517-8a70a400-2f14-11e9-8412-04945bc7c839.png" alt="sample">
 </p>
 
-The gem is configurable and options can be set into ```avatares.rb``` initializer.
+You can also crop and upload your own images.</br>
 
 ## Requirements
 
@@ -31,7 +31,7 @@ docker-compose exec "your-app-service" bundle exec convert -version
 Add to your Gemfile:
 
 ```ruby
-gem 'avatares', '~> 1.0.0', github: 'MateoLa/avatares'
+gem 'avatares', '~> 1.1.0', github: 'MateoLa/avatares'
 ```
 
 And then execute:
@@ -43,21 +43,28 @@ $ rails generate avatares:install
 
 ## Settings
 
-### Text Color, Font & Size
+### Avatares Initializer
 
-You can change the default text color, font or size by modifying the initializer /config/initializer/avatares.rb.
+Options can be set to change the size of the image, the default text color or its font. 
 
 ```ruby
-Avatares.setup do |set|
-  set.color = "#FFFFFF"
-  set.size = "150x150"
-  set.font = "DejaVu-Sans"
+# app/config/initializer/avatares.rb.
+
+Avatares.setup do |config|
+  # Method to get the avatarable in the controller
+  config.avatarable_instance = :current_user
+
+  config.size = "350x350"
+  config.color = "#FFFFFF"
+  config.font = "DejaVu-Sans"
 end
 ```
 
+Avatares assumes that `current_user` method can be used to access the avatarable in your controllers. If not provide an alternative method in `config.avatabrable_instance` (eg. @user).
+
 #### Choosing Fonts
 
-To see what fonts are available, open up the terminal and type ```$ convert -list font```. You can select any font listed when configuring.
+To see what fonts can be choosen open up a terminal and type ```$ convert -list font```.
 
 Over docker run:
 ```sh
@@ -66,7 +73,7 @@ docker-compose exec "your-app-service" bundle exec convert -list font
 
 ### Preparing your models
 
-```acts_as_avatarable``` and ```avatar_string``` method should be added to your avatarable model.
+```acts_as_avatarable``` and ```avatar_string``` methods should be added to your avatarable model.
 
 ```ruby
 class User < ActiveRecord::Base
@@ -81,28 +88,26 @@ end
 
 The engine will extract at most 3 initials from the passed-in string (e.g. Bill James Pheonix MacKenzie will produce an avatar with the initials BJP).
 
-You are not limited to the User model. You can use "acts_as_avatarable" in any other model and use it in several different models.
+You are not limited to the User model. You can use "acts_as_avatarable" in any other model or use it in several different models.
 
 ### Preparing your views
 
-Use in any of your views:
+For rendering an image_tag for an user's avatar:
 
 ```ruby
-<%= image_tag main_app.url_for(@user.avatar) if @user.avatar.attached? %>
+<%= image_tag main_app.url_for(@user.avatar), id: "avataresAvatar" if @user.avatar.attached? %>
 ```
 
-It is possible to change the default avatar uploading any picture to the avatarable model.<br>
-There are two options for that:<br>
-1) Decorate your avatarable controller to ```include Avatares::ControllerHelpers::AvatarParams```
-2) In the avatarable controller permit ```:avatar``` and ```:avatar_img_del``` parameters. You also need to modify the update action to allow the picture deletion.
-
-Then add to your model form:
+For rendering the avatar form:
 
 ```ruby
-<%= f.file_field :avatar, class: "m-3" %>
+<div id="avataresEdit" class="">Edit</div>
+<%= render partial: 'avatars/form', object: @user, as: :avatarable %>
 ```
 
-#### Spree example
+The form is implemented in a javascript PopUp so the `avataresAvatar` and `avataresEdit` IDs cannot be modified and must be used. 
+
+## Spree Example
 
 ```ruby
 module Spree::UserDecorator
@@ -119,11 +124,28 @@ Spree::User.prepend Spree::UserDecorator
 ```
 
 ```ruby
-module Spree::UsersControllerDecorator
-  Spree::UsersController.include Avatares::ControllerHelpers::AvatarParams
-end
+Deface::Override.new(
+  virtual_path: "spree/users/show",
+  name: "Add Avatar to Users Show",
+  insert_top: "div.account-page > div:first-of-type",
+  text: <<-HTML
+    <div class="col-xs-12 col-lg-4" data-hook="account-avatar">
+      <div>
+        <%= image_tag main_app.url_for(@user.avatar), id: "avataresAvatar", size: 200 if @user.avatar.attached? %>
+        <div id="avataresEdit" class="d-inline text-primary ml-3">​
+          <%= inline_svg_tag('edit.svg', width: 27.6, height: 24) %>
+        </div>
+        <%= link_to inline_svg_tag("garbage_2.svg", class: "ml-3"), avatares.avatar_path, method: :delete if @user.avatar.attached? && !@user.avatar.filename.sanitized.include?("avatar-") %>
+        <%= render partial: 'avatars/form', object: @user, as: :avatarable %>
+      </div>
+    </div>
+  HTML
+)
+```
 
-Spree::UsersController.prepend Spree::UsersControllerDecorator
+```ruby
+<%= image_tag main_app.cdn_image_url(@user.avatar), id: "avataresAvatar", size: 200 if @user.avatar.attached? %>
+Can also be used.
 ```
 
 ## References
