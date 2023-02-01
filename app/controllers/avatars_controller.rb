@@ -14,6 +14,7 @@ class AvatarsController < ApplicationController
   
   def destroy
     @avatarable.avatar.purge
+    generate_default_avatar
     redirect_to request.referrer || root_path
   end
   
@@ -29,5 +30,9 @@ class AvatarsController < ApplicationController
 
   def avatar_params
     params.require(model_name).permit(:avatar, :crop_x, :crop_y, :crop_w, :crop_h)
+  end
+
+  def generate_default_avatar
+    DefaultAvatar.new(@avatarable, @avatarable.avatar_string).call
   end
 end

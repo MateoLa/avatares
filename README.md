@@ -149,7 +149,7 @@ Deface::Override.new(
 )
 ```
 
-You can also use:
+For Spree versions ~> 4.4 another option to show the avatar is:
 
 ```ruby
 <%= image_tag main_app.cdn_image_url(@user.avatar), id: "avataresAvatar", size: 200 if @user.avatar.attached? %>
