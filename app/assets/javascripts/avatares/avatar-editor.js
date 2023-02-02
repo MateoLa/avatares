@@ -1,42 +1,41 @@
 function setCropData(data){
-  $("#crop_x").val(data.x);
-  $("#crop_y").val(data.y);
-  $("#crop_w").val(data.width);
-  $("#crop_h").val(data.height);
+  document.getElementById("crop_x").value = data.x;
+  document.getElementById("crop_y").value = data.y;
+  document.getElementById("crop_w").value = data.width;
+  document.getElementById("crop_h").value = data.height;
 }
 
 $(document).ready(function(){
-  const avatar = document.getElementById("avataresAvatar");
-  const trigger = $("#avataresEdit");
+  const avataresAvatar = document.getElementById("avataresAvatar");
+  const avataresEdit = document.getElementById("avataresEdit");
 
-  const input = $("#avataresInput");
-  const popup = $("#avataresPopup");
-  const picture = document.getElementById("avataresPicture");
-  const crop = $("#avataresCrop");
+  const avataresInput = document.getElementById("avataresInput");
+  const avataresPopup = document.getElementById("avataresPopup");
+  const modalEl = new bootstrap.Modal(avataresPopup);
+  const avataresPicture = document.getElementById("avataresPicture");
+  const avataresCrop = document.getElementById("avataresCrop");
   let cropper = null;
+  
+  avataresEdit.addEventListener("click", function(){ avataresInput.click(); });
 
-  trigger.click(function(){ input.click(); });
-
-  input.change(function(event){
+  avataresInput.addEventListener("change", function(event){
     let files = event.target.files;
     let done = function(url){
-      picture.src = url;
-      popup.modal("show");
+      avataresPicture.src = url;
+      modalEl.show();
     };
 
     if (URL){
       done(URL.createObjectURL(files[0]));
     } else if (FileReader){
       let reader = new FileReader();
-      reader.onload = function(event){
-        done(e.target.result);
-      };
+      reader.onload = function(event){ done(e.target.result); };
       reader.readAsDataURL(files[0]);
     };
 	});
 
-  popup.on("shown.bs.modal", function(){
-    cropper = new Cropper(picture, {
+  modalEl._element.addEventListener("shown.bs.modal", function(){
+    cropper = new Cropper(avataresPicture, {
       minContainerWidth: 250,
       minContainerHeight: 250,
       aspectRatio: 1,
@@ -44,24 +43,24 @@ $(document).ready(function(){
     });
   });
   
-  popup.on("hidden.bs.modal", function(){
+  modalEl._element.addEventListener("hidden.bs.modal", function(){
     cropper.destroy();
     cropper = null;
   });
 
-  crop.click(function(){
+  avataresCrop.addEventListener("click", function(){
     setCropData(cropper.getData());
 
     cropper.getCroppedCanvas().toBlob(function(blob){
-      if (URL){ avatar.src = URL.createObjectURL(blob); }
+      if (URL){ avataresAvatar.src = URL.createObjectURL(blob); }
       else if (FileReader){
         let reader = new FileReader();
         reader.readAsDataURL(blob);
-        reader.onloadend = function(event){ avatar.src = reader.result; };
+        reader.onloadend = function(event){ avataresAvatar.src = reader.result; };
       }
     });
 
-    $("#avataresForm").submit();
+    document.getElementById("avataresForm").submit();
   });
 
 });

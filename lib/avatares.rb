@@ -18,9 +18,9 @@ module Avatares
   end
 end
 
-require 'bootstrap'
 require 'jquery-rails'
 require 'jquery-ui-rails'
+require 'bootstrap'
 require "i18n"
 require "image_processing"
 require "active_storage_validations"
