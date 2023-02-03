@@ -6,9 +6,11 @@ Rails gem for Initials Avatars (Gmail style) like those pictured below
 	<img src="https://user-images.githubusercontent.com/138067/52684517-8a70a400-2f14-11e9-8412-04945bc7c839.png" alt="sample">
 </p>
 
-You can also crop and upload your own images.<br />
+You can also crop and upload your own pictures.<br />
 
 ## Requirements
+
+#### ImageMagick
 
 ImageMagick command-line tool has to be installed on your system.<br>
 You can check if you have it installed by running:
@@ -26,26 +28,22 @@ Over docker run:
 docker-compose exec "your-app-service" bundle exec convert -version
 ```
 
-jQuery and Bootstrap needs to be loaded in the page where you Edit the avatar.<br />
-If you don't have them installed include to your header:
+#### jQuery and Bootstrap
 
-```html
-<head>
-...
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-...
-</head>
-```
-
-Over Rails you could add this gems and then require them:
+To edit the Avatar you must have jQuery and Bootstrap installed.<br />
+This is not mandatory but is needed to upload images.<br />
+We're assuming they are already on your system but if not include them into your headers.
 
 ```ruby
 gem 'jquery-rails'
 gem 'jquery-ui-rails', '>= 4.0.0'
 gem 'bootstrap'
+```
+
+```ruby
+//= require jquery3
+//= require jquery_ujs
+//= require bootstrap
 ```
 
 ## Installation
@@ -63,11 +61,13 @@ $ bundle install
 $ rails generate avatares:install
 ```
 
+(After installation verify your routes has: `mount Avatares::Engine, at: '/avatares'`)
+
 ## Settings
 
 ### Initializer
 
-Options can be set to change the size of the image, the default text color or its font. 
+Options can be set to change the image size, the default text color or its font. 
 
 ```ruby
 # app/config/initializer/avatares.rb.
@@ -82,11 +82,13 @@ Avatares.setup do |config|
 end
 ```
 
-Avatares assumes that `current_user` can be used to access the avatarable in your controllers. If not provide an alternative method in `config.avatabrable_instance =` (eg. @user).
+Avatares assumes that `current_user` can be used to access the avatarable in your controllers. If not provide an alternative method in `config.avatabrable_instance =` (eg. @user).<br />
+
+Choose the font among those allowed by minimagick. 
 
 #### Choosing Fonts
 
-To see what fonts can be choosen open up a terminal and type `$ convert -list font`.
+Check what fonts you can choose running `$ convert -list font` on your terminal.
 
 Over docker run:
 ```sh
@@ -123,13 +125,13 @@ For rendering an image_tag for an user's avatar:
 For rendering the avatar form:
 
 ```ruby
-<div id="avataresEdit" class="">Edit</div>
+<div id="avataresEdit">Edit</div>
 <%= render partial: 'avatars/form', object: @user, as: :avatarable %>
 ```
 
-The form is implemented in a JavaScript PopUp so the `avataresEdit` and `avataresAvatar` IDs cannot be modified and must be used.<br />
+The form is implemented in a JS PopUp so the `avataresEdit` and `avataresAvatar` IDs cannot be modified and must be used.<br />
 
-For deleting your picture and return to the default avatar:
+To remove your image and return to the default avatar:
 
 ```ruby
 <%= link_to "Delete", avatares.avatar_path, method: :delete if @user.avatar.attached? && !@user.avatar.filename.sanitized.include?("avatar-") %>
@@ -160,10 +162,8 @@ Deface::Override.new(
     <div class="col-xs-12 col-lg-4" data-hook="account-avatar">
       <div>
         <%= image_tag main_app.url_for(@user.avatar), id: "avataresAvatar", size: 200 if @user.avatar.attached? %>
-        <div id="avataresEdit" class="d-inline text-primary ml-3">​
-          <%= inline_svg_tag('edit.svg', width: 27.6, height: 24) %>
-        </div>
-        <%= link_to inline_svg_tag("garbage_2.svg", class: "ml-3"), avatares.avatar_path, method: :delete if @user.avatar.attached? && !@user.avatar.filename.sanitized.include?("avatar-") %>
+        <div id="avataresEdit" class="text-primary ml-3"> <%= inline_svg_tag('edit.svg', width: 27.6, height: 24) %> </div>​
+        <%= link_to inline_svg_tag("garbage_2.svg"), avatares.avatar_path, method: :delete, class: "ml-3" if @user.avatar.attached? && !@user.avatar.filename.sanitized.include?("avatar-") %>
         <%= render partial: 'avatars/form', object: @user, as: :avatarable %>
       </div>
     </div>
@@ -176,6 +176,10 @@ For Spree versions ~> 4.4 another option to show the avatar is:
 ```ruby
 <%= image_tag main_app.cdn_image_url(@user.avatar), id: "avataresAvatar", size: 200 if @user.avatar.attached? %>
 ```
+
+## To Do
+
+Generate default avatar using vips or minimagic, whichever is installed
 
 ## References
 

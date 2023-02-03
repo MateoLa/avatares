@@ -1,28 +1,23 @@
 function setCropData(data){
-  document.getElementById("crop_x").value = data.x;
-  document.getElementById("crop_y").value = data.y;
-  document.getElementById("crop_w").value = data.width;
-  document.getElementById("crop_h").value = data.height;
+  $("#crop_x").val(data.x);
+  $("#crop_y").val(data.y);
+  $("#crop_w").val(data.width);
+  $("#crop_h").val(data.height);
 }
 
 $(document).ready(function(){
-  const avataresAvatar = document.getElementById("avataresAvatar");
-  const avataresEdit = document.getElementById("avataresEdit");
-
-  const avataresInput = document.getElementById("avataresInput");
-  const avataresPopup = document.getElementById("avataresPopup");
-  const modalEl = new bootstrap.Modal(avataresPopup);
   const avataresPicture = document.getElementById("avataresPicture");
-  const avataresCrop = document.getElementById("avataresCrop");
   let cropper = null;
   
-  avataresEdit.addEventListener("click", function(){ avataresInput.click(); });
+  $("#avataresEdit").click( function(){
+    $("#avataresInput").click();
+  });
 
-  avataresInput.addEventListener("change", function(event){
+  $("#avataresInput").change(function(event){
     let files = event.target.files;
     let done = function(url){
       avataresPicture.src = url;
-      modalEl.show();
+      $("#avataresPopup").modal("show");
     };
 
     if (URL){
@@ -34,7 +29,7 @@ $(document).ready(function(){
     };
 	});
 
-  modalEl._element.addEventListener("shown.bs.modal", function(){
+  $("#avataresPopup").on("shown.bs.modal", function(){
     cropper = new Cropper(avataresPicture, {
       minContainerWidth: 250,
       minContainerHeight: 250,
@@ -43,24 +38,23 @@ $(document).ready(function(){
     });
   });
   
-  modalEl._element.addEventListener("hidden.bs.modal", function(){
+  $("#avataresPopup").on("hidden.bs.modal", function(){
     cropper.destroy();
     cropper = null;
   });
 
-  avataresCrop.addEventListener("click", function(){
+  $("#avataresCrop").click(function(){
     setCropData(cropper.getData());
 
     cropper.getCroppedCanvas().toBlob(function(blob){
-      if (URL){ avataresAvatar.src = URL.createObjectURL(blob); }
+      if (URL){ $("#avataresAvatar").src = URL.createObjectURL(blob); }
       else if (FileReader){
         let reader = new FileReader();
         reader.readAsDataURL(blob);
-        reader.onloadend = function(event){ avataresAvatar.src = reader.result; };
+        reader.onloadend = function(event){ $("#avataresAvatar").attr("src", reader.result); };
       }
     });
 
-    document.getElementById("avataresForm").submit();
+    $("#avataresForm").submit();
   });
-
 });

@@ -1,3 +1,8 @@
 /*
  *= require avatares/cropper
 */
+
+#avataresEdit {
+  display: inline;
+  cursor: pointer; 
+}
