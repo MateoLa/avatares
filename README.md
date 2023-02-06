@@ -8,71 +8,47 @@ Rails gem for Initials Avatars (Gmail style) like those pictured below
 
 Or crop and upload your own pictures.<br />
 
+Works with Vips or imageMagick, whickever you have installed.
+
 ## Requirements
-
-#### ImageMagick
-
-ImageMagick command-line tool has to be installed on your system.<br>
-You can check if you have it installed by running:
-
-```
-$ convert -version
-Version: ImageMagick 6.8.9-7 Q16 x86_64 2014-09-11 http://www.imagemagick.org
-Copyright: Copyright (C) 1999-2014 ImageMagick Studio LLC
-Features: DPC Modules
-Delegates: bzlib fftw freetype jng jpeg lcms ltdl lzma png tiff xml zlib
-```
-
-Over docker run:
-```sh
-docker-compose exec "your-app-service" bundle exec convert -version
-```
-
-
-
-1.1 Requirements
-
-Various features of Active Storage depend on third-party software which Rails will not install, and must be installed separately:
-
-    libvips v8.6+ or ImageMagick for image analysis and transformations
-    ffmpeg v3.4+ for video previews and ffprobe for video/audio analysis
-    poppler or muPDF for PDF previews
-
-Image analysis and transformations also require the image_processing gem. Uncomment it in your Gemfile, or add it if necessary:
-
-gem "image_processing", ">= 1.2"
-
-
-
-
-Variants rely on ImageProcessing gem for the actual transformations of the file, so you must add gem "image_processing" to your Gemfile if you wish to use variants. By default, images will be processed with ImageMagick using the MiniMagick gem, but you can also switch to the libvips processor operated by the ruby-vips gem).
-
-Rails.application.config.active_storage.variant_processor
-# => :mini_magick
-
-Rails.application.config.active_storage.variant_processor = :vips
-# => :vips
-
-
-
-
 
 #### jQuery and Bootstrap
 
-To edit the Avatar you must have jQuery and Bootstrap installed.<br />
-This is not mandatory but it is needed to upload images.<br />
-We're assuming they are already installed on your system but if not include them into your headers.
+This is not mandatory but it is needed to edit and upload images.<br />
+Otherwise you will work only with the initials avatar.<br />
+If they are not installed on your system include them into your headers.
 
 ```ruby
 gem 'jquery-rails'
 gem 'jquery-ui-rails', '>= 4.0.0'
-gem 'bootstrap'
+gem 'bootstrap', '~> 4.0'
 ```
 
 ```ruby
 //= require jquery3
 //= require jquery_ujs
 //= require bootstrap
+```
+
+#### Vips or ImageMagick
+
+Image analysis and transformation is made with ImageProcessing which depends on Vips or ImageMagick.<br /> 
+The gem will use whatever is configured in your ActiveStorage processor.<br>
+You can check this by running:
+
+```
+irb(main):001:0> Rails.application.config.active_storage.variant_processor
+=> :vips
+or:
+=> :mini_magick
+```
+
+If none of them are installed add to your Dockerfile:
+
+```sh
+RUN apt-get update -yq \
+  && apt-get upgrade -yq \
+  && apt-get install -y --no-install-recommends imagemagick libvips42  <---  One of them
 ```
 
 ## Installation
@@ -90,7 +66,7 @@ $ bundle install
 $ rails generate avatares:install
 ```
 
-(After installation verify your routes has: `mount Avatares::Engine, at: '/avatares'`)
+After installation verify your routes for: `mount Avatares::Engine, at: '/avatares'`
 
 ## Settings
 
@@ -111,17 +87,17 @@ Avatares.setup do |config|
 end
 ```
 
-Avatares assumes that `current_user` can be used to access the avatarable in your controllers. If not provide an alternative method in `config.avatabrable_instance =` (eg. @user).<br />
+Avatares assumes that `current_user` can be used to access the avatarable in your controllers. If not, you must provide an alternative method in `config.avatabrable_instance =` (eg. @user).<br />
 
-Choose the font among those allowed by minimagick. 
+To use MiniMagick you must also configure one of its allowed fonts. 
 
-#### Choosing Fonts
+#### Choosing Fonts for MiniMagick
 
 Check what fonts you can choose running `$ convert -list font` on your terminal.
 
-Over docker run:
+Or over docker run:
 ```sh
-docker-compose exec "your-app-service" bundle exec convert -list font
+docker-compose run --rm "your-app-service" bundle exec convert -list font
 ```
 
 ### Preparing your models
@@ -145,7 +121,7 @@ You are not limited to the User model. You can use "acts_as_avatarable" in any o
 
 ### Preparing your views
 
-For rendering an image_tag for an user's avatar:
+For rendering an user's avatar:
 
 ```ruby
 <%= image_tag main_app.url_for(@user.avatar), id: "avataresAvatar" if @user.avatar.attached? %>
@@ -158,7 +134,7 @@ For rendering the avatar form:
 <%= render partial: 'avatars/form', object: @user, as: :avatarable %>
 ```
 
-The form is implemented in a JS PopUp so the `avataresEdit` and `avataresAvatar` IDs cannot be modified and must be used.<br />
+The form is implemented in a hidden JS PopUp so the `avataresEdit` and `avataresAvatar` IDs cannot be modified and must be present.
 
 To remove your image and return to the default avatar:
 
@@ -205,10 +181,6 @@ For Spree versions ~> 4.4 another option to show the avatar is:
 ```ruby
 <%= image_tag main_app.cdn_image_url(@user.avatar), id: "avataresAvatar", size: 200 if @user.avatar.attached? %>
 ```
-
-## To Do
-
-Generate default avatar using vips or minimagic, whichever is installed
 
 ## References
 

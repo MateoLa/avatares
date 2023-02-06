@@ -16,7 +16,7 @@ class DefaultAvatar
   def initialize(instance, string)
     @instance = instance
 
-    # defaults
+    # configs
     @color       = Avatares.color
     @size        = Avatares.size
     @font        = Avatares.font
@@ -25,13 +25,13 @@ class DefaultAvatar
     @text = (string.split(/\s/)- ["", nil]).map { |t| t[0].upcase }.slice(0, 3).join('')
 
     @w, @h = @size.split('x').map(&:to_i)
-    @font_size = ( @w / [@text.length, 2].max ).to_i
   end
 
   def call
-    if defined? ImageProcessing::Vips
-      vips_image
-    elsif defined? ImageProcessing::MiniMagick
+    image_processor = Rails.application.config.active_storage.variant_processor
+    if image_processor == :vips
+      vips_image 
+    elsif image_processor == :mini_magick
       magick_image
     end
   end
@@ -46,25 +46,27 @@ class DefaultAvatar
     BG_COLORS[Zlib.crc32(avatar_param).modulo(BG_COLORS.length)]
   end
 
-  def hex_to_rgb(value)
-    value = value.remove("#")
-    value.chars.each_slice(2).map{ |e| e.join.to_i(16) }
-  end
-
   # to_param returns the model’s id stringified.
   def avatar_param
     @instance.to_param
   end
 
+  #b71c1c --> [183, 28, 28]
+  def hex_to_rgb(value)
+    value = value.remove("#")
+    value.chars.each_slice(2).map{ |e| e.join.to_i(16) }
+  end
+
   def vips_image
     file = Tempfile.new ["avatar", ".png"], binmode: true
 
-#    pixel = (Vips::Image.black(1, 1) + hex_to_rgb(avatar_bg)).cast("uchar")
-#    image = pixel.embed 0, 0, @w, @h, extend: :copy
-    alpha = Vips::Image.text(@text, width: @w, height: @h)
-    image = alpha.ifthenelse(hex_to_rgb(@color), hex_to_rgb(avatar_bg), blend: true)
+    background = hex_to_rgb(avatar_bg)
+    @text.length == 1 ? width = @w/3 : width = 3*@w/5
+    height = 3*@w/5
 
-#    final = image.composite(alpha, "over", x: 20, y: 20)
+    alpha = Vips::Image.text(@text, width: width, height: height)
+    text = alpha.ifthenelse(hex_to_rgb(@color), background, blend: true)
+    image = text.gravity("centre", @w, @h, extend: "background", background: background)
     image.write_to_file(file.path)
 
     @instance.avatar.attach io: File.open(file), filename: "avatar-#{@instance.id}.png", content_type: 'image/png'
@@ -72,8 +74,8 @@ class DefaultAvatar
   end
 
   def magick_image
-    # Create a temporary file for an output image
-    avatar_image = Tempfile.new ["avatar", ".png"], binmode: true
+    file = Tempfile.new ["avatar", ".png"], binmode: true
+    @font_size = ( @w / [@text.length, 2].max ).to_i
 
     MiniMagick::Tool::Convert.new do |image|
       image.size @size
@@ -84,10 +86,10 @@ class DefaultAvatar
       image.font @font
       image.fill @color
       image.draw "text 0,0 #{@text}"
-      image << avatar_image.path
+      image << file.path
     end
 
-    @instance.avatar.attach io: File.open(avatar_image), filename: "avatar-#{@instance.id}.png", content_type: 'image/png'
-    avatar_image.close
+    @instance.avatar.attach io: File.open(file), filename: "avatar-#{@instance.id}.png", content_type: 'image/png'
+    file.close
   end
 end
