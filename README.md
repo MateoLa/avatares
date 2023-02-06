@@ -95,7 +95,7 @@ To use MiniMagick you must also configure one of its allowed fonts.
 
 Check what fonts you can choose running `$ convert -list font` on your terminal.
 
-Or over docker run:
+Over docker run:
 ```sh
 docker-compose run --rm "your-app-service" bundle exec convert -list font
 ```
