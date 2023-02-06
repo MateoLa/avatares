@@ -6,7 +6,7 @@ Rails gem for Initials Avatars (Gmail style) like those pictured below
 	<img src="https://user-images.githubusercontent.com/138067/52684517-8a70a400-2f14-11e9-8412-04945bc7c839.png" alt="sample">
 </p>
 
-You can also crop and upload your own pictures.<br />
+Or crop and upload your own pictures.<br />
 
 ## Requirements
 
@@ -28,11 +28,40 @@ Over docker run:
 docker-compose exec "your-app-service" bundle exec convert -version
 ```
 
+
+
+1.1 Requirements
+
+Various features of Active Storage depend on third-party software which Rails will not install, and must be installed separately:
+
+    libvips v8.6+ or ImageMagick for image analysis and transformations
+    ffmpeg v3.4+ for video previews and ffprobe for video/audio analysis
+    poppler or muPDF for PDF previews
+
+Image analysis and transformations also require the image_processing gem. Uncomment it in your Gemfile, or add it if necessary:
+
+gem "image_processing", ">= 1.2"
+
+
+
+
+Variants rely on ImageProcessing gem for the actual transformations of the file, so you must add gem "image_processing" to your Gemfile if you wish to use variants. By default, images will be processed with ImageMagick using the MiniMagick gem, but you can also switch to the libvips processor operated by the ruby-vips gem).
+
+Rails.application.config.active_storage.variant_processor
+# => :mini_magick
+
+Rails.application.config.active_storage.variant_processor = :vips
+# => :vips
+
+
+
+
+
 #### jQuery and Bootstrap
 
 To edit the Avatar you must have jQuery and Bootstrap installed.<br />
-This is not mandatory but is needed to upload images.<br />
-We're assuming they are already on your system but if not include them into your headers.
+This is not mandatory but it is needed to upload images.<br />
+We're assuming they are already installed on your system but if not include them into your headers.
 
 ```ruby
 gem 'jquery-rails'

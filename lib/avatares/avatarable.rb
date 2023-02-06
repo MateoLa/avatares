@@ -37,7 +37,7 @@ module Avatares
         crop: area,
         resize_to_fit: size
       )
-      self.crop_w = self.crop_h = self.crop_x = self.crop_y = nil    # Prevents an infinite loop
+      self.crop_w = self.crop_h = self.crop_x = self.crop_y = nil    # Avoiding an infinite loop
 
       url = ActiveStorage::Blob.service.send(:path_for, self.avatar.key)
       input = File.open(url)

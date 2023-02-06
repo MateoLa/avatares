@@ -1,7 +1,10 @@
 require 'tempfile'
 
-class DefaultAvatar
+image_processor = Rails.application.config.active_storage.variant_processor
+require "vips" if image_processor == :vips
+require "mini_magick" if image_processor == :mini_magick
 
+class DefaultAvatar
   # "Material Design Colors" work well with white text. 
   BG_COLORS = [ "#e53935", "#b71c1c", "#d81b60", "#880e4f", "#8e24aa", "#4a148c",
     "#5e35b1", "#311b92", "#3949ab", "#1a237e", "#1e88e5", "#0d47a1", "#039be5", "#01579b",
@@ -21,11 +24,54 @@ class DefaultAvatar
     # extract the first letter of the first 3 words and capitalize
     @text = (string.split(/\s/)- ["", nil]).map { |t| t[0].upcase }.slice(0, 3).join('')
 
-    w, h = @size.split('x').map(&:to_i)
-    @font_size = ( w / [@text.length, 2].max ).to_i
+    @w, @h = @size.split('x').map(&:to_i)
+    @font_size = ( @w / [@text.length, 2].max ).to_i
   end
 
   def call
+    if defined? ImageProcessing::Vips
+      vips_image
+    elsif defined? ImageProcessing::MiniMagick
+      magick_image
+    end
+  end
+
+  private
+    
+  # We don’t care which colour is chosen for the avatar background but we need to be consistent.
+  # If we simply call AVATAR_COLORS.sample, a random but different value will be returned everytime.
+  # To ensure consistency, we use the Zlib library to calculate the crc checksum of a string returned by avatar_param.
+  # The modulo operation on the checksum ensure we’re in the bounds of our array of colours.
+  def avatar_bg
+    BG_COLORS[Zlib.crc32(avatar_param).modulo(BG_COLORS.length)]
+  end
+
+  def hex_to_rgb(value)
+    value = value.remove("#")
+    value.chars.each_slice(2).map{ |e| e.join.to_i(16) }
+  end
+
+  # to_param returns the model’s id stringified.
+  def avatar_param
+    @instance.to_param
+  end
+
+  def vips_image
+    file = Tempfile.new ["avatar", ".png"], binmode: true
+
+#    pixel = (Vips::Image.black(1, 1) + hex_to_rgb(avatar_bg)).cast("uchar")
+#    image = pixel.embed 0, 0, @w, @h, extend: :copy
+    alpha = Vips::Image.text(@text, width: @w, height: @h)
+    image = alpha.ifthenelse(hex_to_rgb(@color), hex_to_rgb(avatar_bg), blend: true)
+
+#    final = image.composite(alpha, "over", x: 20, y: 20)
+    image.write_to_file(file.path)
+
+    @instance.avatar.attach io: File.open(file), filename: "avatar-#{@instance.id}.png", content_type: 'image/png'
+    file.close
+  end
+
+  def magick_image
     # Create a temporary file for an output image
     avatar_image = Tempfile.new ["avatar", ".png"], binmode: true
 
@@ -43,20 +89,5 @@ class DefaultAvatar
 
     @instance.avatar.attach io: File.open(avatar_image), filename: "avatar-#{@instance.id}.png", content_type: 'image/png'
     avatar_image.close
-  end
-
-  private
-    
-  # We don’t care which colour is chosen for the avatar background but we need to be consistent.
-  # If we simply call AVATAR_COLORS.sample, a random but different value will be returned everytime.
-  # To ensure consistency, we use the Zlib library to calculate the crc checksum of a string returned by avatar_param.
-  # The modulo operation on the checksum ensure we’re in the bounds of our array of colours.
-  def avatar_bg
-    BG_COLORS[Zlib.crc32(avatar_param).modulo(BG_COLORS.length)]
-  end
-
-  # to_param returns the model’s id stringified.
-  def avatar_param
-    @instance.to_param
   end
 end
